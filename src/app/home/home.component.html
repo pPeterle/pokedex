@@ -1,1 +1,47 @@
-<p>home works!</p>
+<ngx-spinner></ngx-spinner>
+<main class="col-md-8">
+  <app-toolbar (selectedPokemon)="filteredPokemon($event)" (clearPokemon)="clearPokemon()" ></app-toolbar>
+    <section
+    #container
+    class="container"
+    *ngIf="pokemonListApi && pokemonListApi.results.length !== 0"
+  >
+    <div class="pokemon" *ngFor="let pokemon of pokemonListApi.results">
+      <span [ngClass]="pokemon.id > 10000 ? 'decreaseFontSize' : ''">{{
+        pokemon.id | idPokemon
+      }}</span>
+      <img [src]="pokemon.sprites.front_default" alt="Sprite pokemon" />
+      <div class="description">
+        <p class="name">{{ pokemon.name | titlecase }}</p>
+        <div class="atributes">
+          <p *ngFor="let type of pokemon.types" [ngClass]="type.type.name">
+            {{ type.type.name }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div class="pagination">
+    <button
+      mat-fab
+      color="primary"
+      [disabled]="pokemonListApi && (requestNewPage.value === 0 || !pokemonListApi.previous)"
+      aria-label="Previus Page"
+      (click)="searchPreviusPage()"
+    >
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+    <button
+      mat-fab
+      color="primary"
+      [disabled]="pokemonListApi && !pokemonListApi.next"
+      aria-label="Next Page"
+      (click)="searchNextPage()"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
+</main>

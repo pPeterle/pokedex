@@ -1,0 +1,55 @@
+<div class="toolbar container-fluid">
+  <div class="gx-5 d-flex align-items-center" style="height: 100%">
+    <img class="h-100" src="assets/pokemon.png" alt="Pokemon" />
+    <div class="container-fluid d-flex justify-content-end align-items-center">
+      <div class="form col-6">
+        <div class="form" *ngIf="showSearchInput" [@fadeInOut]>
+          <input
+            class="form__input"
+            type="text"
+            placeholder=" "
+            [formControl]="control"
+            [matAutocomplete]="auto"
+            (keypress)="changeText()"
+            #input
+          />
+          <button
+            *ngIf="input.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="input.value = ''; clearText()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+
+          <label for="email" class="form__label">Pokemons</label>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="pokemonSelected($event.option.value)"
+          >
+            <mat-option
+              *ngFor="let pokemon of filteredPokemons | async"
+              [value]="pokemon"
+            >
+              {{ pokemon }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+      <div>
+        <button
+          mat-icon-button
+          color="primary"
+          aria-label="Search"
+          (click)="showSearchInput = !showSearchInput"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" aria-label="Favorite">
+          <mat-icon>favorite</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
