@@ -5,7 +5,7 @@
       <div class="form col-6">
         <div class="form" *ngIf="showSearchInput" [@fadeInOut]>
           <input
-            class="form__input"
+            class="input"
             type="text"
             placeholder=" "
             [formControl]="control"
@@ -23,7 +23,7 @@
             <mat-icon>close</mat-icon>
           </button>
 
-          <label for="email" class="form__label">Pokemons</label>
+          <label for="email" class="label">Pokemons</label>
           <mat-autocomplete
             #auto="matAutocomplete"
             (optionSelected)="pokemonSelected($event.option.value)"
