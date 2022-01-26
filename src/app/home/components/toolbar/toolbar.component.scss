@@ -1,19 +1,27 @@
 @import "variables";
 
 .toolbar {
-  height: 80px;
+  min-height: 80px;
   padding: 8px;
   border-bottom: 1px solid $background-dark;
   margin-bottom: 20px;
   background: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 
   input {
     background: transparent;
   }
+
+  .spacer {
+    flex-grow: 1;
+  }
 }
 
 img {
-  height: 70px;
+  height: 80px;
   margin: 10px;
 }
 
@@ -24,6 +32,7 @@ img {
 .form {
   position: relative;
   height: 3rem;
+  min-width: 150px;
 
   .input {
     position: absolute;
@@ -74,3 +83,8 @@ img {
   left: 0.8rem;
 }
 
+@media (max-width: 575.98px) {
+  .spacer {
+    flex-grow: 0 !important;
+  }
+}
