@@ -15,12 +15,13 @@ export class LocalDb extends Dexie {
 
   async addPokemonsName(list: PokemonListModel[]) {
     try {
-      const verifyPokemonsNotInDatabase = await localDb.pokemonNameListTable
+      const verifyPokemonsInDatabase = await localDb.pokemonNameListTable
         .where('name')
-        .noneOf(list.map((i) => i.name))
+        .anyOf(list.map((i) => i.name))
         .toArray();
-      const listFiltered = list.filter((pokemon) =>
-        verifyPokemonsNotInDatabase.includes(pokemon)
+      const listFiltered = list.filter(
+        (pokemon) =>
+          !verifyPokemonsInDatabase.map((p) => p.name).includes(pokemon.name)
       );
       await localDb.pokemonNameListTable.bulkAdd(listFiltered);
     } catch (e) {
@@ -31,14 +32,14 @@ export class LocalDb extends Dexie {
   async addPokemonData(list: PokemonModel[]): Promise<PokemonModel[]> {
     console.log('adicionando pokemon');
     try {
-      const verifyPokemonsNotInDatabase = await localDb.pokemonTable
-      .where('name')
-      .noneOf(list.map((i) => i.name))
+      const verifyPokemonsInDatabase = await localDb.pokemonTable
+        .where('name')
+        .anyOf(list.map((p) => p.name))
         .toArray();
-        const listFiltered = list.filter(
-          (pokemon) => !verifyPokemonsNotInDatabase.includes(pokemon)
-          );
-          console.log(`pokemons adicionados: ${listFiltered.length}`);
+      const listFiltered = list.filter(
+        (pokemon) => !verifyPokemonsInDatabase.includes(pokemon)
+      );
+      console.log(`pokemons adicionados: ${listFiltered.length}`);
       await localDb.pokemonTable.bulkAdd(listFiltered);
       return list;
     } catch (e) {

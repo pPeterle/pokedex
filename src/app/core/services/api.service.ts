@@ -5,7 +5,7 @@ import { Observable ,  throwError } from 'rxjs';
 
 import { catchError } from 'rxjs/operators';
 
-export const QUERY_LIMIT = 50;
+export const QUERY_LIMIT = 20;
 export const POPULATE_POKEMON_URL = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=100';
 
 @Injectable()

@@ -41,12 +41,7 @@ export class PokemonService {
 
     return this.apiService
       .get<ApiResultModel<PokemonListModel>>('pokemon', params)
-      .pipe(
-        switchMap((data) => {
-          console.log(`limit: ${QUERY_LIMIT} offset:${QUERY_LIMIT * page}  dados: ${data.next} ${data.previous} ${data.count}`)
-          return this.getLocalOrApi(data);
-        })
-      );
+      .pipe(switchMap((data) => this.getLocalOrApi(data)));
   }
 
   async searchPokemonName(name: string): Promise<string[]> {
