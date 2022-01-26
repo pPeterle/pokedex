@@ -1,0 +1,42 @@
+<div mat-dialog-content>
+  <header>
+    <div>
+      <p class="title">
+        {{ pokemon.name }}
+      </p>
+      <div class="atributes">
+        <p *ngFor="let type of pokemon.types" [ngClass]="type.type.name">
+          {{ type.type.name }}
+        </p>
+      </div>
+    </div>
+    <img [src]="pokemon.sprites.front_default" alt="Sprite pokemon" />
+  </header>
+  <main>
+    <h2>Status:</h2>
+    <div class="stats" *ngFor="let stat of pokemon.stats">
+      <p>{{ stat.stat.name | titlecase }}</p>
+      <div class="d-flex align-items-center">
+        <mat-progress-bar
+          mode="determinate"
+          [value]="stat.base_stat | valueStatPercentage"
+        ></mat-progress-bar>
+        <span class="percentage">
+          {{stat.base_stat }}
+        </span>
+      </div>
+    </div>
+    <div class="stats">
+      <p>Total:</p>
+      <div class="d-flex align-items-center">
+        <mat-progress-bar
+          mode="determinate"
+          [value]="totalStatusPercentage"
+        ></mat-progress-bar>
+        <span class="percentage">
+          {{totalStatus }}
+        </span>
+      </div>
+    </div>
+  </main>
+</div>

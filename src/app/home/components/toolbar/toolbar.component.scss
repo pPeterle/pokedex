@@ -83,6 +83,10 @@ img {
   left: 0.8rem;
 }
 
+.selected {
+  background-color: $accent;
+}
+
 @media (max-width: 575.98px) {
   .spacer {
     flex-grow: 0 !important;

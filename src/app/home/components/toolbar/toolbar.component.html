@@ -42,4 +42,13 @@
   >
     <mat-icon>search</mat-icon>
   </button>
+  <button
+    mat-icon-button
+    color="primary"
+    aria-label="Fight"
+    (click)="fightPokemon()"
+    [ngClass]="fightState ? 'selected' : '' "
+  >
+    <mat-icon>local_fire_department</mat-icon>
+  </button>
 </div>

@@ -1,0 +1,49 @@
+@import "variables";
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  .pokemon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h3 {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 18px;
+    }
+
+    img {
+      width: 50px;
+    }
+  }
+
+  .winner {
+    border: 2px solid $accent;
+    padding: 5px;
+    border-radius: 0.5rem;
+    box-shadow: 1px 1px 5px 0px #8ac6d0;
+  }
+
+  .winner-text {
+    background-color: $gray;
+    padding: 5px;
+    color: $white;
+    border-radius: 5px;
+  }
+
+  .divider {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 0 25px;
+  }
+}

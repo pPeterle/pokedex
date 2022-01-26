@@ -5,10 +5,13 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, filter, map, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, map, Subject, Subscription } from 'rxjs';
 import { ApiResultModel, PokemonModel } from '../core/models';
-import { PokemonService } from '../core/services';
+import { PokemonFightService, PokemonService } from '../core/services';
+import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
+import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/fight-pokemon-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -22,10 +25,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   requestNewPage = new BehaviorSubject(0);
   requestPokemon = new Subject<string>();
   subscriptions: Subscription[] = [];
+  pokemonsFightList: string[] = [];
 
   constructor(
     private pokemonService: PokemonService,
-    private spinner: NgxSpinnerService
+    private pokemonFightService: PokemonFightService,
+    private spinner: NgxSpinnerService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
           this.pokemonService.getListPokemon(page).subscribe({
             next: (data) => {
+              console.log(this.pokemonsFightList);
               this.pokemonListApi = data;
               this.container && this.container.nativeElement.scrollTo(0, 0);
               this.spinner.hide();
@@ -45,23 +52,47 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.requestPokemon.pipe(
-        filter((pokemon) =>  pokemon !== null && pokemon !== undefined),
-        map((pokemon) => {
-          return this.pokemonService.getPokemon(pokemon).subscribe({
-            next: (data) => {
-              console.log(data);
-              this.pokemonListApi = {
-                previous: undefined,
-                next: undefined,
-                count: 1,
-                results: [data],
-              };
-            },
-          })
-        })
-      ).subscribe()
+      this.pokemonFightService.pokemonFightList.subscribe({
+        next: (pokemons) => {
+          this.pokemonsFightList = pokemons.map((p) => p.name);
+        },
+      })
+    );
 
+    this.subscriptions.push(
+      this.pokemonFightService.resultFight.subscribe({
+        next: (pokemons) => {
+          const dialog = this.dialog.open(FightPokemonDialogComponent, {
+            data: pokemons,
+            width: '400px'
+          });
+          dialog.afterClosed().subscribe({
+            next: () => {
+              this.pokemonFightService.exitFight();
+            },
+          });
+        },
+      })
+    );
+
+    this.subscriptions.push(
+      this.requestPokemon
+        .pipe(
+          filter((pokemon) => pokemon !== null && pokemon !== undefined),
+          map((pokemon) => {
+            return this.pokemonService.getPokemon(pokemon).subscribe({
+              next: (data) => {
+                this.pokemonListApi = {
+                  previous: undefined,
+                  next: undefined,
+                  count: 1,
+                  results: [data],
+                };
+              },
+            });
+          })
+        )
+        .subscribe()
     );
   }
 
@@ -86,6 +117,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   clearPokemon() {
-    this.requestNewPage.next(0);
+    this.requestNewPage.next(this.requestNewPage.value);
+  }
+
+  openPokemonDetails(pokemon: PokemonModel) {
+    this.dialog.open(DetailsPokemonDialogComponent, {
+      data: pokemon,
+      width: '500px',
+    });
+  }
+
+  selectPokemon(pokemon: PokemonModel) {
+    if (this.pokemonFightService.atualBatleStatus) {
+      this.pokemonFightService.addPokemonToFight(pokemon);
+    } else {
+      this.openPokemonDetails(pokemon);
+    }
   }
 }

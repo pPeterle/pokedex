@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { ApiService, PokemonService } from '.';
-import { GlobalErrorHandler } from '../global-error-handler';
+import { ApiService, PokemonFightService, PokemonService } from './services';
+import { GlobalErrorHandler } from './global-error-handler';
 
 @NgModule({
   declarations: [],
@@ -13,6 +13,7 @@ import { GlobalErrorHandler } from '../global-error-handler';
     ApiService,
     PokemonService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    PokemonFightService
   ],
 })
 export class CoreModule {}

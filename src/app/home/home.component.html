@@ -1,12 +1,20 @@
 <ngx-spinner></ngx-spinner>
 <main class="col-md-8">
-  <app-toolbar (selectedPokemon)="filteredPokemon($event)" (clearPokemon)="clearPokemon()" ></app-toolbar>
-    <section
+  <app-toolbar
+    (selectedPokemon)="filteredPokemon($event)"
+    (clearPokemon)="clearPokemon()"
+  ></app-toolbar>
+  <section
     #container
     class="container"
     *ngIf="pokemonListApi && pokemonListApi.results.length !== 0"
   >
-    <div class="pokemon" *ngFor="let pokemon of pokemonListApi.results">
+    <div
+      class="pokemon"
+      [ngClass]="pokemonsFightList.includes(pokemon.name) ? 'selected' : ''"
+      *ngFor="let pokemon of pokemonListApi.results"
+      (click)="selectPokemon(pokemon)"
+    >
       <span [ngClass]="pokemon.id > 10000 ? 'decreaseFontSize' : ''">{{
         pokemon.id | idPokemon
       }}</span>
@@ -22,13 +30,14 @@
     </div>
   </section>
 
-
-
   <div class="pagination">
     <button
       mat-fab
       color="primary"
-      [disabled]="pokemonListApi && (requestNewPage.value === 0 || !pokemonListApi.previous)"
+      [disabled]="
+        pokemonListApi &&
+        (requestNewPage.value === 0 || !pokemonListApi.previous)
+      "
       aria-label="Previus Page"
       (click)="searchPreviusPage()"
     >
