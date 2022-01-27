@@ -7,7 +7,15 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, filter, map, Subject, Subscription, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  map,
+  mergeMap,
+  Subject,
+  Subscription,
+  tap,
+} from 'rxjs';
 import { ApiResultModel, PokemonModel } from '../core/models';
 import { PokemonFightService, PokemonService } from '../core/services';
 import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
@@ -36,19 +44,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.requestNewPage.subscribe((page) => {
-        this.spinner.show();
-        this.subscriptions.push(
-          this.pokemonService.getListPokemon(page).subscribe({
-            next: (data) => {
-              console.log(this.pokemonsFightList);
-              this.pokemonListApi = data;
-              this.container && this.container.nativeElement.scrollTo(0, 0);
-              this.spinner.hide();
-            },
+      this.requestNewPage
+        .pipe(
+          tap(() => {
+            this.spinner.show();
+          }),
+          mergeMap((page) => {
+            return this.pokemonService.getListPokemon(page).pipe(
+              tap((data) => {
+                console.log(this.pokemonsFightList);
+                this.pokemonListApi = data;
+                this.container && this.container.nativeElement.scrollTo(0, 0);
+                this.spinner.hide();
+              })
+            );
           })
-        );
-      })
+        )
+        .subscribe()
     );
 
     this.subscriptions.push(
