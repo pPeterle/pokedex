@@ -1,37 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { Observable, forkJoin, firstValueFrom, lastValueFrom } from 'rxjs';
+import {
+  Observable,
+  forkJoin,
+  tap,
+  lastValueFrom,
+  BehaviorSubject,
+  from,
+} from 'rxjs';
 
 import { ApiService, QUERY_LIMIT } from './api.service';
 import { PokemonModel, PokemonListModel, ApiResultModel } from '../models';
 import { map, switchMap, mergeMap } from 'rxjs/operators';
 import { localDb } from '../database/local.database';
-import { POPULATE_POKEMON_URL } from '.';
+import LocalStorageDatabase from '../database/local-storage.database';
 
 @Injectable()
 export class PokemonService {
-  constructor(private apiService: ApiService) {}
+  private _lastPokemonSearch: BehaviorSubject<string[]>;
 
-  async populateLocalDb(url: string = POPULATE_POKEMON_URL) {
-    const resultApi = await firstValueFrom(
-      this.apiService.getWithUrl<ApiResultModel<PokemonListModel>>(url).pipe(
-        mergeMap(async (data) => {
-          await localDb.addPokemonsName(data.results);
-          return data;
-        })
-      )
-    );
-
-    const countPokemon = await localDb.getCountPokemonName();
-    if (countPokemon === resultApi.count) return;
-
-    if (resultApi.next) {
-      this.populateLocalDb(resultApi.next);
-    }
+  constructor(private apiService: ApiService) {
+    const historySearch = LocalStorageDatabase.getHistorySearch();
+    this._lastPokemonSearch = new BehaviorSubject<string[]>(historySearch);
   }
 
   getPokemon(name: string): Observable<PokemonModel> {
-    return this.apiService.get<PokemonModel>(`pokemon/${name}`);
+    return this.apiService.get<PokemonModel>(`pokemon/${name}`).pipe(
+      tap(() => {
+        LocalStorageDatabase.saveHistorySearch(name);
+      })
+    );
   }
 
   getListPokemon(page = 0): Observable<ApiResultModel<PokemonModel>> {
@@ -44,13 +42,20 @@ export class PokemonService {
       .pipe(switchMap((data) => this.getLocalOrApi(data)));
   }
 
-  async searchPokemonName(name: string): Promise<string[]> {
+  searchPokemonName(name: string): Observable<string[]> {
     try {
-      const pokemons = await localDb.searchPokemonName(name);
-      return pokemons.map((p) => p.name);
+      if (name === '') {
+        return this._lastPokemonSearch.pipe(
+          map((pokemons) => pokemons.filter((name) => name !== ''))
+        );
+      } else {
+        return from(localDb.searchPokemonName(name)).pipe(
+          map((list) => list.map((p) => p.name))
+        );
+      }
     } catch (e) {
       console.error(e);
-      return [];
+      return new Observable();
     }
   }
 
@@ -87,7 +92,7 @@ export class PokemonService {
   ): Observable<ApiResultModel<PokemonModel>> {
     return forkJoin(
       data.results.map((pokemon) =>
-        this.apiService.getWithUrl<PokemonModel>(pokemon.url)
+        this.apiService.get<PokemonModel>(`pokemon/${pokemon.name}`)
       )
     )
       .pipe(mergeMap((pokemon) => localDb.addPokemonData(pokemon)))

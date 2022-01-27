@@ -32,7 +32,7 @@ img {
 .form {
   position: relative;
   height: 3rem;
-  min-width: 150px;
+  min-width: 200px;
 
   .input {
     position: absolute;
@@ -72,6 +72,7 @@ img {
     color: $text-color;
     cursor: text;
     background: $white;
+    pointer-events: none;
     transition: top 200ms ease-in, left 200ms ease-in, font-size 200ms ease-in;
   }
 }

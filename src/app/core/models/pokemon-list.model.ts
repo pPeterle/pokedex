@@ -1,5 +1,5 @@
 export interface PokemonListModel {
   name: string;
-  url: string;
+  url?: string;
   id?: number;
 }

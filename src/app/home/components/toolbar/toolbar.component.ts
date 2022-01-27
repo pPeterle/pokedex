@@ -1,81 +1,66 @@
 import {
   Component,
-  OnInit,
   Output,
   EventEmitter,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, debounce, interval, tap, Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { style, animate, transition, trigger } from '@angular/animations';
+import { debounce, interval, mergeMap, tap, Observable, Subscription, startWith } from 'rxjs';
 import { PokemonFightService, PokemonService } from 'src/app/core/services';
-
-export interface User {
-  name: string;
-}
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate(500, style({ opacity: 1 })),
-      ]),
-      transition(':leave', [animate(500, style({ opacity: 0 }))]),
-    ]),
-  ],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
-  control = new FormControl();
-  filteredPokemons: Observable<string[]> = new Observable();
-  showSearchInput = false;
-  subscription: Subscription;
-
   fightState = false;
+  subscriptions: Subscription[] = [];
+  filteredPokemons: Observable<string[]> = new Observable();
+  control = new FormControl();
 
   @Output() selectedPokemon = new EventEmitter<string>();
   @Output() clearPokemon = new EventEmitter<boolean>();
 
   constructor(
-    private pokemonService: PokemonService,
-    private pokemonFightService: PokemonFightService
+    private pokemonFightService: PokemonFightService,
+    private pokemonService: PokemonService
   ) {
-    this.subscription = pokemonFightService.batleStatus.subscribe({
-      next: (status) => {
-        this.fightState = status;
-      },
-    });
+    this.subscriptions.push(
+      pokemonFightService.batleStatus.subscribe({
+        next: (status) => {
+          this.fightState = status;
+        },
+      })
+    );
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.filteredPokemons = this.control.valueChanges.pipe(
-      debounce((i) => interval(400)),
-      mergeMap(this.pokemonService.searchPokemonName)
+      startWith(''),
+      debounce(() => interval(200)),
+      mergeMap((name) => {
+        return this.pokemonService.searchPokemonName(name);
+      })
     );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.map((s) => s.unsubscribe());
   }
 
-  pokemonSelected(pokemon: string) {
-    this.selectedPokemon.emit(pokemon);
-  }
-
-  changeText() {
-    this.selectedPokemon.emit();
+  getPokemonData() {
+    console.log('get pokemon data');
+    this.selectedPokemon.emit(this.control.value);
   }
 
   clearText() {
     this.clearPokemon.emit(true);
+    this.control.setValue('');
   }
 
-  fightPokemon() {
-    this.fightState = !this.fightState;
-    this.pokemonFightService.setFightState(this.fightState);
+  changeFightState() {
+    this.pokemonFightService.setFightState(!this.fightState);
   }
 }
