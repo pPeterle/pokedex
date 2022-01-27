@@ -28,6 +28,8 @@ export class PokemonService {
     return this.apiService.get<PokemonModel>(`pokemon/${name}`).pipe(
       tap(() => {
         LocalStorageDatabase.saveHistorySearch(name);
+        const history = LocalStorageDatabase.getHistorySearch();
+        this._lastPokemonSearch.next(history);
       })
     );
   }
