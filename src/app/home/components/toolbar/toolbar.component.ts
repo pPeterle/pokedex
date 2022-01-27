@@ -6,7 +6,15 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounce, interval, mergeMap, tap, Observable, Subscription, startWith } from 'rxjs';
+import {
+  debounce,
+  interval,
+  mergeMap,
+  tap,
+  Observable,
+  Subscription,
+  startWith,
+} from 'rxjs';
 import { PokemonFightService, PokemonService } from 'src/app/core/services';
 
 @Component({
@@ -15,8 +23,9 @@ import { PokemonFightService, PokemonService } from 'src/app/core/services';
   styleUrls: ['./toolbar.component.scss'],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
+
   fightState = false;
-  subscriptions: Subscription[] = [];
   filteredPokemons: Observable<string[]> = new Observable();
   control = new FormControl();
 

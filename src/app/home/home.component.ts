@@ -26,13 +26,14 @@ import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/f
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @ViewChild('container') container!: ElementRef;
+  private requestNewPage = new BehaviorSubject(0);
+  private requestPokemon = new BehaviorSubject<string>('');
+  private subscriptions: Subscription[] = [];
 
   pokemonListApi!: ApiResultModel<PokemonModel>;
-  requestNewPage = new BehaviorSubject(0);
-  requestPokemon = new BehaviorSubject<string>('');
-  subscriptions: Subscription[] = [];
   pokemonsFightList: string[] = [];
+
+  @ViewChild('container') container!: ElementRef;
 
   constructor(
     private pokemonService: PokemonService,

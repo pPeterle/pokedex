@@ -5,9 +5,8 @@ import { PokemonBatle } from 'src/app/core/services';
 @Component({
   selector: 'app-fight-pokemon-dialog',
   templateUrl: './fight-pokemon-dialog.component.html',
-  styleUrls: ['./fight-pokemon-dialog.component.scss']
+  styleUrls: ['./fight-pokemon-dialog.component.scss'],
 })
 export class FightPokemonDialogComponent {
-
-  constructor(@Inject(MAT_DIALOG_DATA) public pokemons: PokemonBatle[], ) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public pokemons: PokemonBatle[]) {}
 }

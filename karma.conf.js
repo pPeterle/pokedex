@@ -8,6 +8,7 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
+      require('karma-firefox-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
@@ -18,6 +19,7 @@ module.exports = function (config) {
         // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
         // for example, you can disable the random execution with `random: false`
         // or set a specific seed with `seed: 4321`
+        failSpecWithNoExpectations: true,
       },
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
@@ -29,7 +31,7 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         { type: 'html' },
-        { type: 'text-summary' }
+        { type: 'text-summary' },
       ]
     },
     reporters: ['progress', 'kjhtml'],

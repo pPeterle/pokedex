@@ -22,5 +22,4 @@ export class DetailsPokemonDialogComponent {
     this.totalStatus = stats;
     this.totalStatusPercentage = (stats / MAX_STAT_TOTAL) * 100;
   }
-
 }
