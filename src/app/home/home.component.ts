@@ -10,10 +10,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import {
   BehaviorSubject,
   filter,
-  map,
   mergeMap,
-  Subject,
   Subscription,
+  switchMap,
   tap,
 } from 'rxjs';
 import { ApiResultModel, PokemonModel } from '../core/models';
@@ -31,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   pokemonListApi!: ApiResultModel<PokemonModel>;
   requestNewPage = new BehaviorSubject(0);
-  requestPokemon = new Subject<string>();
+  requestPokemon = new BehaviorSubject<string>('');
   subscriptions: Subscription[] = [];
   pokemonsFightList: string[] = [];
 
@@ -86,7 +85,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
       })
     );
-
     this.subscriptions.push(
       this.requestPokemon
         .pipe(
@@ -97,9 +95,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           tap(() => {
             this.spinner.show();
           }),
-          mergeMap((pokemon) => {
+          switchMap((pokemon) => {
             return this.pokemonService.getPokemon(pokemon);
           }),
+
           tap((data) => {
             this.pokemonListApi = {
               previous: undefined,

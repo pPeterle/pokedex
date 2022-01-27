@@ -7,11 +7,12 @@ import {
   lastValueFrom,
   BehaviorSubject,
   from,
+  EMPTY
 } from 'rxjs';
 
 import { ApiService, QUERY_LIMIT } from './api.service';
 import { PokemonModel, PokemonListModel, ApiResultModel } from '../models';
-import { map, switchMap, mergeMap } from 'rxjs/operators';
+import { map, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { localDb } from '../database/local.database';
 import LocalStorageDatabase from '../database/local-storage.database';
 
@@ -30,7 +31,8 @@ export class PokemonService {
         LocalStorageDatabase.saveHistorySearch(name);
         const history = LocalStorageDatabase.getHistorySearch();
         this._lastPokemonSearch.next(history);
-      })
+      }),
+      catchError(() => EMPTY)
     );
   }
 
