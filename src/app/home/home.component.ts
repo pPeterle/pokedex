@@ -97,20 +97,16 @@ export class HomeComponent implements OnInit, OnDestroy {
           tap(() => {
             this.spinner.show();
           }),
-          map((pokemon) => {
-            console.log(pokemon);
-            return this.pokemonService.getPokemon(pokemon).subscribe({
-              next: (data) => {
-                this.pokemonListApi = {
-                  previous: undefined,
-                  next: undefined,
-                  count: 1,
-                  results: [data],
-                };
-              },
-            });
+          mergeMap((pokemon) => {
+            return this.pokemonService.getPokemon(pokemon);
           }),
-          tap(() => {
+          tap((data) => {
+            this.pokemonListApi = {
+              previous: undefined,
+              next: undefined,
+              count: 1,
+              results: [data],
+            };
             this.spinner.hide();
           })
         )
