@@ -6,7 +6,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(public snackBar: MatSnackBar, private zone: NgZone, private spinner: NgxSpinnerService) {}
+  constructor(
+    public snackBar: MatSnackBar,
+    private zone: NgZone,
+    private spinner: NgxSpinnerService
+  ) {}
 
   showSuccess(message: string): void {
     this.zone.run(() => {
@@ -16,7 +20,10 @@ export class NotificationService {
 
   showError(message: string): void {
     this.zone.run(() => {
-      this.snackBar.open(message, 'X', { panelClass: ['error'] });
+      this.snackBar.open(message, 'X', {
+        panelClass: ['error'],
+        duration: 2500,
+      });
       this.spinner.hide();
     });
   }
