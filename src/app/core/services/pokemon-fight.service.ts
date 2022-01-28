@@ -90,5 +90,4 @@ export class PokemonFightService {
     this._resultFightSubject.next(pokemonsWithWinner);
   }
 
-  private resetPokemons() {}
 }

@@ -3,13 +3,14 @@
   <div class="spacer"></div>
   <div class="form">
     <input
-      class="input"
-      type="text"
-      placeholder=" "
-      [matAutocomplete]="auto"
-      [formControl]="control"
-      (keyup.enter)="getPokemonData()"
-      #input
+    class="input"
+    type="text"
+    placeholder=" "
+    [matAutocomplete]="auto"
+    [formControl]="control"
+    (keyup.enter)="getPokemonData()"
+    data-testid="search-pokemon-input"
+    #input
     />
     <button
       *ngIf="input.value"
@@ -17,6 +18,8 @@
       mat-icon-button
       aria-label="Clear"
       (click)="clearText()"
+      data-testid="clear-button"
+      class="my-button1"
     >
       <mat-icon>close</mat-icon>
     </button>
@@ -39,6 +42,7 @@
     color="primary"
     aria-label="Search"
     (click)="getPokemonData()"
+    data-testid="search-button"
   >
     <mat-icon>search</mat-icon>
   </button>

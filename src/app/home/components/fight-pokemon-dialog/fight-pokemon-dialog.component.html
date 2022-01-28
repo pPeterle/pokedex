@@ -1,16 +1,16 @@
 <h1 mat-dialog-title>Luta!!</h1>
 <div class="content" mat-dialog-content>
-  <div class="pokemon" [ngClass]="pokemons[0].winner ? 'winner' : '' ">
+  <div class="pokemon" [ngClass]="pokemons[0].winner ? 'winner' : ''">
     <img [src]="pokemons[0].sprites.front_default" alt="Pokemon Sprite" />
-    <h3>{{ pokemons[0].name| titlecase}}</h3>
-    <p>Total: {{pokemons[0].total}}</p>
+    <h3>{{ pokemons[0].name | titlecase }}</h3>
+    <p>Total: {{ pokemons[0].total }}</p>
     <p class="winner-text" *ngIf="pokemons[0].winner">Ganhador !!!</p>
   </div>
   <p class="divider">X</p>
   <div class="pokemon" [ngClass]="pokemons[1].winner ? 'winner' : ''">
     <img [src]="pokemons[1].sprites.front_default" alt="Pokemon Sprite" />
     <h3>{{ pokemons[1].name | titlecase }}</h3>
-    <p>Total: {{pokemons[1].total}}</p>
+    <p>Total: {{ pokemons[1].total }}</p>
     <p class="winner-text" *ngIf="pokemons[1].winner">Ganhador !!!</p>
   </div>
 </div>

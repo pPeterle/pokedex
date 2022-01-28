@@ -60,7 +60,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   getPokemonData() {
-    console.log('get pokemon data');
     this.selectedPokemon.emit(this.control.value);
   }
 

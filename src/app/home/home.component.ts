@@ -26,10 +26,11 @@ import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/f
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private requestNewPage = new BehaviorSubject(0);
+
   private requestPokemon = new BehaviorSubject<string>('');
   private subscriptions: Subscription[] = [];
 
+  requestNewPage = new BehaviorSubject(0);
   pokemonListApi!: ApiResultModel<PokemonModel>;
   pokemonsFightList: string[] = [];
 
@@ -52,7 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           mergeMap((page) => {
             return this.pokemonService.getListPokemon(page).pipe(
               tap((data) => {
-                console.log(this.pokemonsFightList);
                 this.pokemonListApi = data;
                 this.container && this.container.nativeElement.scrollTo(0, 0);
                 this.spinner.hide();
@@ -132,7 +132,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   filteredPokemon(pokemon: string) {
-    console.log(pokemon);
     this.requestPokemon.next(pokemon);
   }
 
