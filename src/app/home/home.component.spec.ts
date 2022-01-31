@@ -11,6 +11,7 @@ import {
 import {
   click,
   findComponent,
+  findEls,
   makeClickEvent,
 } from '../spec-helper/element.spec';
 import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
@@ -133,7 +134,7 @@ describe('HomeComponent', () => {
     click(fixture, 'next-page-button');
     click(fixture, 'previus-page-button');
 
-    expect(pages[0]).toBe(pages[1] + 1 + 1 - 1);
+    expect(pages[0]).toBe(pages[pages.length-1] - 1 - 1 + 1);
   });
 
   it('filter the list', () => {
