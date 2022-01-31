@@ -1,33 +1,27 @@
-import { Injectable } from '@angular/core';
 import Dexie, { Table } from 'dexie';
+import { environment } from 'src/environments/environment';
 import { PokemonListModel, PokemonModel } from '../models';
 
-@Injectable()
 export class LocalDatabase extends Dexie {
   private pokemonTable!: Table<PokemonModel, number>;
 
-  constructor() {
-    super('ngdexieliveQuery');
-    this.version(2).stores({
+  constructor(private nameBd: string = environment.database_name) {
+    super(nameBd);
+    this.version(3).stores({
       pokemonTable: 'id, &name',
     });
   }
 
   async addPokemonData(list: PokemonModel[]): Promise<PokemonModel[]> {
-    try {
-      const verifyPokemonsInDatabase = await this.pokemonTable
-        .where('name')
-        .anyOf(list.map((p) => p.name))
-        .toArray();
-      const listFiltered = list.filter(
-        (pokemon) => !verifyPokemonsInDatabase.includes(pokemon)
-      );
-      await this.pokemonTable.bulkAdd(listFiltered);
-      return list;
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
+    const verifyPokemonsInDatabase = await this.pokemonTable
+      .where('name')
+      .anyOf(list.map((p) => p.name))
+      .toArray();
+    const listFiltered = list.filter(
+      (pokemon) => !verifyPokemonsInDatabase.includes(pokemon)
+    );
+    await this.pokemonTable.bulkAdd(listFiltered);
+    return list;
   }
 
   async getPokemonsByNames(names: string[]): Promise<PokemonModel[]> {
@@ -48,5 +42,8 @@ export class LocalDatabase extends Dexie {
       .limit(5)
       .toArray();
   }
-}
 
+  clearDatabase() {
+    return Dexie.delete(this.nameBd);
+  }
+}
