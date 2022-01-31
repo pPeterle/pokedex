@@ -1,4 +1,8 @@
+import { Injectable } from "@angular/core";
+
 const HISTORY_SEARCH_POKEMON_KEY = 'historySearchPokemonKey';
+
+@Injectable()
 export class LocalStorageDatabase {
   saveHistorySearch(pokemon: string) {
     const historyPokemons = this.getHistorySearch();
@@ -7,8 +11,6 @@ export class LocalStorageDatabase {
       if(historyPokemons.length > 5) {
         historyPokemons.pop();
       }
-      console.log('salvando')
-      console.log(historyPokemons)
       localStorage.setItem(HISTORY_SEARCH_POKEMON_KEY, JSON.stringify(historyPokemons));
     }
   }
@@ -19,5 +21,3 @@ export class LocalStorageDatabase {
     else return [];
   }
 }
-
-export default new LocalStorageDatabase();

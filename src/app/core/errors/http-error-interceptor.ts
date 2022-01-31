@@ -8,8 +8,12 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
+import { NotificationService } from './notification.service';
 
 export class HttpErrorInterceptor implements HttpInterceptor {
+
+  constructor(private notificationService: NotificationService) {}
+
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -33,6 +37,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
 
         message = navigator.onLine ? message : 'Sem conexão à internet';
+        this.notificationService.showError(message);
         return throwError(() => new Error(message));
       })
     );

@@ -7,16 +7,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class NotificationService {
   constructor(
-    public snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private zone: NgZone,
     private spinner: NgxSpinnerService
   ) {}
-
-  showSuccess(message: string): void {
-    this.zone.run(() => {
-      this.snackBar.open(message);
-    });
-  }
 
   showError(message: string): void {
     this.zone.run(() => {

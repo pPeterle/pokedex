@@ -47,8 +47,6 @@ export class PokemonFightService {
       return;
     }
 
-    if (this._pokemonsFightSubject.value.length >= 2) return;
-
     this._pokemonsFightSubject.value.push(pokemon);
     this._pokemonsFightSubject.next(this._pokemonsFightSubject.value);
 
@@ -89,5 +87,4 @@ export class PokemonFightService {
     });
     this._resultFightSubject.next(pokemonsWithWinner);
   }
-
 }

@@ -1,8 +1,10 @@
+import { Injectable } from '@angular/core';
 import Dexie, { Table } from 'dexie';
 import { PokemonListModel, PokemonModel } from '../models';
 
-export class LocalDb extends Dexie {
-  pokemonTable!: Table<PokemonModel, number>;
+@Injectable()
+export class LocalDatabase extends Dexie {
+  private pokemonTable!: Table<PokemonModel, number>;
 
   constructor() {
     super('ngdexieliveQuery');
@@ -13,14 +15,14 @@ export class LocalDb extends Dexie {
 
   async addPokemonData(list: PokemonModel[]): Promise<PokemonModel[]> {
     try {
-      const verifyPokemonsInDatabase = await localDb.pokemonTable
+      const verifyPokemonsInDatabase = await this.pokemonTable
         .where('name')
         .anyOf(list.map((p) => p.name))
         .toArray();
       const listFiltered = list.filter(
         (pokemon) => !verifyPokemonsInDatabase.includes(pokemon)
       );
-      await localDb.pokemonTable.bulkAdd(listFiltered);
+      await this.pokemonTable.bulkAdd(listFiltered);
       return list;
     } catch (e) {
       console.error(e);
@@ -29,7 +31,7 @@ export class LocalDb extends Dexie {
   }
 
   async getPokemonsByNames(names: string[]): Promise<PokemonModel[]> {
-    const pokemons = await localDb.pokemonTable
+    const pokemons = await this.pokemonTable
       .where('name')
       .anyOf(names)
       .sortBy('id');
@@ -40,7 +42,7 @@ export class LocalDb extends Dexie {
   }
 
   async searchPokemonName(name: string): Promise<PokemonListModel[]> {
-    return localDb.pokemonTable
+    return this.pokemonTable
       .where('name')
       .startsWithIgnoreCase(name)
       .limit(5)
@@ -48,4 +50,3 @@ export class LocalDb extends Dexie {
   }
 }
 
-export const localDb = new LocalDb();

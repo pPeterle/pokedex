@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   Observable,
   forkJoin,
@@ -7,29 +7,35 @@ import {
   lastValueFrom,
   BehaviorSubject,
   from,
-  EMPTY
+  EMPTY,
 } from 'rxjs';
 
-import { ApiService, QUERY_LIMIT } from './api.service';
 import { PokemonModel, PokemonListModel, ApiResultModel } from '../models';
 import { map, switchMap, mergeMap, catchError } from 'rxjs/operators';
-import { localDb } from '../database/local.database';
-import LocalStorageDatabase from '../database/local-storage.database';
+import { LocalDatabase } from '../database/local.database';
+import { LocalStorageDatabase } from '../database/local-storage.database';
+import { environment } from 'src/environments/environment';
+
+export const QUERY_LIMIT = 20;
 
 @Injectable()
 export class PokemonService {
   private _lastPokemonSearch: BehaviorSubject<string[]>;
 
-  constructor(private apiService: ApiService) {
-    const historySearch = LocalStorageDatabase.getHistorySearch();
+  constructor(
+    private http: HttpClient,
+    private localDatabase: LocalDatabase,
+    private localStorage: LocalStorageDatabase
+  ) {
+    const historySearch = this.localStorage.getHistorySearch();
     this._lastPokemonSearch = new BehaviorSubject<string[]>(historySearch);
   }
 
   getPokemon(name: string): Observable<PokemonModel> {
-    return this.apiService.get<PokemonModel>(`pokemon/${name}`).pipe(
+    return this.http.get<PokemonModel>(`pokemon/${name}`).pipe(
       tap(() => {
-        LocalStorageDatabase.saveHistorySearch(name);
-        const history = LocalStorageDatabase.getHistorySearch();
+        this.localStorage.saveHistorySearch(name);
+        const history = this.localStorage.getHistorySearch();
         this._lastPokemonSearch.next(history);
       }),
       catchError(() => EMPTY)
@@ -41,25 +47,20 @@ export class PokemonService {
       .set('limit', QUERY_LIMIT)
       .set('offset', QUERY_LIMIT * page);
 
-    return this.apiService
-      .get<ApiResultModel<PokemonListModel>>('pokemon', params)
+    return this.http
+      .get<ApiResultModel<PokemonListModel>>('pokemon', { params })
       .pipe(switchMap((data) => this.getLocalOrApi(data)));
   }
 
   searchPokemonName(name: string): Observable<string[]> {
-    try {
-      if (name === '') {
-        return this._lastPokemonSearch.pipe(
-          map((pokemons) => pokemons.filter((name) => name !== ''))
-        );
-      } else {
-        return from(localDb.searchPokemonName(name)).pipe(
-          map((list) => list.map((p) => p.name))
-        );
-      }
-    } catch (e) {
-      console.error(e);
-      return new Observable();
+    if (name === '') {
+      return this._lastPokemonSearch.pipe(
+        map((pokemons) => pokemons.filter((name) => name !== ''))
+      );
+    } else {
+      return from(this.localDatabase.searchPokemonName(name)).pipe(
+        map((list) => list.map((p) => p.name))
+      );
     }
   }
 
@@ -80,8 +81,7 @@ export class PokemonService {
     data: ApiResultModel<PokemonListModel>
   ): Promise<ApiResultModel<PokemonModel>> {
     const name = data.results.map((pokemon) => pokemon.name);
-    const pokemons = await localDb.getPokemonsByNames(name);
-
+    const pokemons = await this.localDatabase.getPokemonsByNames(name);
     const localPokemonModel: ApiResultModel<PokemonModel> = {
       count: data.count,
       next: data.next,
@@ -96,10 +96,10 @@ export class PokemonService {
   ): Observable<ApiResultModel<PokemonModel>> {
     return forkJoin(
       data.results.map((pokemon) =>
-        this.apiService.get<PokemonModel>(`pokemon/${pokemon.name}`)
+        this.http.get<PokemonModel>(`pokemon/${pokemon.name}`)
       )
     )
-      .pipe(mergeMap((pokemon) => localDb.addPokemonData(pokemon)))
+      .pipe(mergeMap((pokemon) => this.localDatabase.addPokemonData(pokemon)))
       .pipe(
         map((pokemonModel) => {
           const apiResultPokemonModel: ApiResultModel<PokemonModel> = {
