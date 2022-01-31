@@ -14,8 +14,9 @@
       [ngClass]="pokemonsFightList.includes(pokemon.name) ? 'selected' : ''"
       *ngFor="let pokemon of pokemonListApi.results"
       (click)="selectPokemon(pokemon)"
+      data-testid="pokemon-item"
     >
-      <span [ngClass]="pokemon.id > 10000 ? 'decreaseFontSize' : ''">{{
+      <span [ngClass]="pokemon.id > 10000 ? 'decreaseFontSize' : ''" data-testid="pokemon-item-id" >{{
         pokemon.id | idPokemon
       }}</span>
       <img [src]="pokemon.sprites.front_default" alt="Sprite pokemon" />
@@ -40,7 +41,7 @@
       "
       aria-label="Previus Page"
       (click)="searchPreviusPage()"
-      data-testid="next-page-button"
+      data-testid="previus-page-button"
     >
       <mat-icon>navigate_before</mat-icon>
     </button>
@@ -50,7 +51,7 @@
       [disabled]="pokemonListApi && !pokemonListApi.next"
       aria-label="Next Page"
       (click)="searchNextPage()"
-      data-testid="previus-page-button"
+      data-testid="next-page-button"
     >
       <mat-icon>navigate_next</mat-icon>
     </button>
