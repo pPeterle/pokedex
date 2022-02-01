@@ -15,9 +15,9 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { PokemonService } from '../core/http';
-import { ApiResultModel, PokemonModel } from '../core/models';
-import { PokemonFightService } from '../core/services';
+import { PokemonService } from '../../core/http';
+import { ApiResultModel, PokemonModel } from '../../core/models';
+import { PokemonFightService } from '../../core/services';
 import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
 import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/fight-pokemon-dialog.component';
 

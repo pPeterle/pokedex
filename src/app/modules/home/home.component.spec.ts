@@ -2,17 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { of } from 'rxjs';
-import { PokemonModel } from '../core/models';
-import {
-  PokemonBatle,
-  PokemonFightService,
-  PokemonService,
-} from '../core/services';
+import { PokemonService } from 'src/app/core/http';
+import { PokemonModel } from '../../core/models';
+import { PokemonBatle, PokemonFightService } from '../../core/services';
 import {
   click,
   findComponent,
   makeClickEvent,
-} from '../spec-helper/element.spec';
+} from '../../spec-helper/element.spec';
 import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
 import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/fight-pokemon-dialog.component';
 

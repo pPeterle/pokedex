@@ -13,9 +13,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { HomeComponent } from './home.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { IdPokemonPipe } from '../shared/pipes/id-pokemon.pipe';
+import { IdPokemonPipe } from '../../shared/pipes/id-pokemon.pipe';
 import { DetailsPokemonDialogComponent } from './components/details-pokemon-dialog/details-pokemon-dialog.component';
-import { ValueStatPercentagePipe } from '../shared/pipes/value-stat-percentage.pipe';
+import { ValueStatPercentagePipe } from '../../shared/pipes/value-stat-percentage.pipe';
 import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/fight-pokemon-dialog.component';
 
 @NgModule({

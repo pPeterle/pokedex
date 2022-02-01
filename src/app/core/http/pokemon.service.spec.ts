@@ -1,4 +1,3 @@
-import { PokemonService, QUERY_LIMIT } from '../services';
 import { LocalDatabase } from '../database/local.database';
 import { LocalStorageDatabase } from '../database/local-storage.database';
 import { ApiResultModel, PokemonListModel, PokemonModel } from '../models';
@@ -7,6 +6,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { PokemonService, QUERY_LIMIT } from '.';
 
 describe('Api Service', () => {
   let pokemonService: PokemonService;

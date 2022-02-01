@@ -5,7 +5,8 @@ import {
   tick,
 } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { PokemonFightService, PokemonService } from 'src/app/core/services';
+import { PokemonService } from 'src/app/core/http';
+import { PokemonFightService } from 'src/app/core/services';
 import {
   click,
   findEl,

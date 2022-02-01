@@ -1,4 +1,4 @@
-import { MAX_STAT } from 'src/app/home/components/details-pokemon-dialog/details-pokemon-dialog.component';
+import { MAX_STAT } from 'src/app/modules/home/components/details-pokemon-dialog/details-pokemon-dialog.component';
 import { ValueStatPercentagePipe } from './value-stat-percentage.pipe';
 
 describe('ValueStatPercentagePipe', () => {
