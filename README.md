@@ -2,8 +2,8 @@
 
 
 [![Gmail][gmail-shield]][gmail-url]
-[![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -85,7 +85,9 @@ Shared: Elements that are shared in the application <br>
    npm run start
    ```
 ### Tests
-
+<br>
+Jasmine for unit and integration tests and Cypress for end to end tests.
+<br> <br>
   <img src="src/assets/tests.png" alt="Logo" >
 
 1. Unit Tests
@@ -99,9 +101,6 @@ Shared: Elements that are shared in the application <br>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-<div >
-
-</div>
 <table>
   <tr>
     <td valign="top"> <img src="src/assets/home-page.png" alt="Home"> </td>
