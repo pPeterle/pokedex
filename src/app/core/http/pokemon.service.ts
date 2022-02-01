@@ -30,11 +30,22 @@ export class PokemonService {
   }
 
   getPokemon(name: string): Observable<PokemonModel> {
-    return this.http.get<PokemonModel>(`pokemon/${name}`).pipe(
+    const fakeApiResult: ApiResultModel<PokemonListModel> = {
+      count: 1,
+      results: [
+        {
+          name,
+        },
+      ],
+    };
+    return from(this.getLocalOrApi(fakeApiResult)).pipe(
       tap(() => {
         this.localStorage.saveHistorySearch(name);
         const history = this.localStorage.getHistorySearch();
         this._lastPokemonSearch.next(history);
+      }),
+      map((apiResult) => {
+        return apiResult.results[0];
       }),
       catchError(() => EMPTY)
     );
@@ -96,18 +107,17 @@ export class PokemonService {
       data.results.map((pokemon) =>
         this.http.get<PokemonModel>(`pokemon/${pokemon.name}`)
       )
-    )
-      .pipe(mergeMap((pokemon) => this.localDatabase.addPokemonData(pokemon)))
-      .pipe(
-        map((pokemonModel) => {
-          const apiResultPokemonModel: ApiResultModel<PokemonModel> = {
-            count: data.count,
-            next: data.next,
-            previous: data.previous,
-            results: pokemonModel,
-          };
-          return apiResultPokemonModel;
-        })
-      );
+    ).pipe(
+      mergeMap((pokemon) => this.localDatabase.addPokemonData(pokemon)),
+      map((pokemonModel) => {
+        const apiResultPokemonModel: ApiResultModel<PokemonModel> = {
+          count: data.count,
+          next: data.next,
+          previous: data.previous,
+          results: pokemonModel,
+        };
+        return apiResultPokemonModel;
+      })
+    );
   }
 }

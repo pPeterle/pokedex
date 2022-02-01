@@ -27,7 +27,7 @@ describe('Api Service', () => {
   };
 
   let historySearch = ['history'];
-  let pokemonsSavedLocal: PokemonModel[] = [];
+  let pokemonsSavedLocal: PokemonModel[] = [pokemonData];
   let searchPokemonInDatabase: PokemonListModel[] = [{ name: 'search' }];
 
   let page = 0;
@@ -70,10 +70,10 @@ describe('Api Service', () => {
     controller = TestBed.inject(HttpTestingController);
   });
 
-  it('return pokemon data', () => {
+  it('return pokemon data locally', fakeAsync(() => {
     let pokemon: PokemonModel | undefined;
-    const pokemonName = 'kabuto';
-    pokemonService.getPokemon(pokemonName).subscribe({
+
+    pokemonService.getPokemon(pokemonData.name).subscribe({
       next: (data) => {
         pokemon = data;
       },
@@ -81,18 +81,54 @@ describe('Api Service', () => {
         fail('Error');
       },
     });
-    controller.expectOne(`pokemon/${pokemonName}`).flush(pokemonData);
+
+    tick(1000);
 
     expect(fakeLocalStorage.saveHistorySearch).toHaveBeenCalledWith(
-      pokemonName
+      pokemonData.name
     );
     expect(fakeLocalStorage.getHistorySearch).toHaveBeenCalled();
     expect(pokemon).toBe(pokemonData);
-  });
+  }));
 
-  it('return empy observable on error when get miss the pokemon name', () => {
+  it('return pokemon data api when locally fails', fakeAsync(() => {
+    let pokemon: PokemonModel | undefined;
+    fakeLocalDatabase.getPokemonsByNames = jasmine
+      .createSpy()
+      .and.rejectWith(new Error('Pokemon not found'));
+
+    pokemonService.getPokemon(pokemonData.name).subscribe({
+      next: (data) => {
+        pokemon = data;
+      },
+      error: () => {
+        fail('Error');
+      },
+    });
+
+    tick(1000);
+    controller.expectOne(`pokemon/${pokemonData.name}`).flush(<PokemonModel>{
+      ...pokemonData,
+    });
+
+    tick(1000);
+
+    expect(fakeLocalStorage.saveHistorySearch).toHaveBeenCalledWith(
+      pokemonData.name
+    );
+    expect(fakeLocalStorage.getHistorySearch).toHaveBeenCalled();
+    expect(fakeLocalDatabase.addPokemonData).toHaveBeenCalledOnceWith([
+      pokemonData,
+    ]);
+    expect(pokemon).toEqual(pokemonData);
+  }));
+
+  it('return empy observable on error when get miss the pokemon name', fakeAsync(() => {
     let complete = false;
     const pokemonName = 'kabuto';
+    fakeLocalDatabase.getPokemonsByNames = jasmine
+      .createSpy()
+      .and.rejectWith(new Error('Pokemon not found'));
     pokemonService.getPokemon(pokemonName).subscribe({
       next: () => {
         fail('Cannot emit result');
@@ -104,13 +140,15 @@ describe('Api Service', () => {
         complete = true;
       },
     });
+    tick(1000);
     controller.expectOne(`pokemon/${pokemonName}`).flush('', {
       status: 404,
       statusText: 'Not found',
     });
+    tick(1000);
 
     expect(complete).toBe(true);
-  });
+  }));
 
   it('return list of pokemons locally', fakeAsync(() => {
     let resultApi: ApiResultModel<PokemonModel> | undefined;
