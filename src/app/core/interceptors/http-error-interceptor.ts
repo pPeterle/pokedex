@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '../services/notification.service';
 
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(private notificationService: NotificationService) {}

@@ -6,7 +6,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { environment } from 'src/environments/environment';
 import { HttpErrorInterceptor } from './http-error-interceptor';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '../services/notification.service';
 
 describe('Http error interceptor', () => {
   let fakeNotificationService: NotificationService;

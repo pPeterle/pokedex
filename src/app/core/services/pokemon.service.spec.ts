@@ -1,4 +1,4 @@
-import { PokemonService, QUERY_LIMIT } from '.';
+import { NotificationService, PokemonService, QUERY_LIMIT } from '.';
 import { LocalDatabase } from '../database/local.database';
 import { LocalStorageDatabase } from '../database/local-storage.database';
 import { ApiResultModel, PokemonListModel, PokemonModel } from '../models';
@@ -7,11 +7,16 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpErrorInterceptor } from '../interceptors/http-error-interceptor';
+import { HttpBaseUrlInterceptor } from '../interceptors/http-base-url-inteceptor';
+import { environment } from 'src/environments/environment';
 
 describe('Api Service', () => {
   let pokemonService: PokemonService;
   let fakeLocalDatabase: LocalDatabase;
   let fakeLocalStorage: LocalStorageDatabase;
+  let fakeNotificationService: NotificationService;
   let controller: HttpTestingController;
 
   const pokemonData: PokemonModel = {
@@ -30,12 +35,26 @@ describe('Api Service', () => {
   let pokemonsSavedLocal: PokemonModel[] = [];
   let searchPokemonInDatabase: PokemonListModel[] = [{ name: 'search' }];
 
+  let page = 0;
+  const limit = QUERY_LIMIT;
+  let offset = page * limit;
+
   beforeEach(() => {
+    page = 0;
+
+    offset = page * limit;
     fakeLocalStorage = jasmine.createSpyObj<LocalStorageDatabase>(
       'LocalStorageDatabase',
       {
         getHistorySearch: historySearch,
         saveHistorySearch: undefined,
+      }
+    );
+
+    fakeNotificationService = jasmine.createSpyObj<NotificationService>(
+      'NotificationService',
+      {
+        showError: undefined,
       }
     );
 
@@ -57,6 +76,21 @@ describe('Api Service', () => {
           provide: LocalStorageDatabase,
           useValue: fakeLocalStorage,
         },
+        {
+          provide: NotificationService,
+          useValue: fakeNotificationService,
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: HttpErrorInterceptor,
+          multi: true,
+          deps: [NotificationService],
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: HttpBaseUrlInterceptor,
+          multi: true,
+        },
       ],
     });
     pokemonService = TestBed.inject(PokemonService);
@@ -71,10 +105,12 @@ describe('Api Service', () => {
         pokemon = data;
       },
       error: () => {
-        console.log('errorrr');
+        fail('Error');
       },
     });
-    controller.expectOne(`pokemon/${pokemonName}`).flush(pokemonData);
+    controller
+      .expectOne(`${environment.api_url}pokemon/${pokemonName}`)
+      .flush(pokemonData);
 
     expect(fakeLocalStorage.saveHistorySearch).toHaveBeenCalledWith(
       pokemonName
@@ -83,7 +119,7 @@ describe('Api Service', () => {
     expect(pokemon).toBe(pokemonData);
   });
 
-  it('return empy observable on error when get pokemon data', () => {
+  it('return empy observable on error when get miss the pokemon name', () => {
     let complete = false;
     const pokemonName = 'kabuto';
     pokemonService.getPokemon(pokemonName).subscribe({
@@ -98,19 +134,22 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(`pokemon/${pokemonName}`)
-      .error(new ProgressEvent('Error'));
+      .expectOne(`${environment.api_url}pokemon/${pokemonName}`)
+      .flush('', {
+        status: 404,
+        statusText: 'Not found',
+      });
 
+    expect(fakeNotificationService.showError).toHaveBeenCalledWith(
+      'Pokemon não encontrado'
+    );
     expect(complete).toBe(true);
   });
 
   it('return list of pokemons locally', fakeAsync(() => {
     let resultApi: ApiResultModel<PokemonModel> | undefined;
-    let page = 0;
-    const limit = QUERY_LIMIT;
-    const offset = page * limit;
     pokemonsSavedLocal = [pokemonData];
-    pokemonService.getListPokemon(page).subscribe({
+    pokemonService.getListPokemon().subscribe({
       next: (data) => {
         resultApi = data;
       },
@@ -119,7 +158,9 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(`pokemon?limit=${QUERY_LIMIT}&offset=${offset}`)
+      .expectOne(
+        `${environment.api_url}pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
+      )
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
         results: [pokemonData],
@@ -137,9 +178,6 @@ describe('Api Service', () => {
 
   it('return list of pokemons api when locally fails', fakeAsync(() => {
     let resultApi: ApiResultModel<PokemonModel> | undefined;
-    let page = 0;
-    const limit = QUERY_LIMIT;
-    const offset = page * limit;
 
     fakeLocalDatabase.getPokemonsByNames = jasmine
       .createSpy()
@@ -154,14 +192,18 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(`pokemon?limit=${QUERY_LIMIT}&offset=${offset}`)
+      .expectOne(
+        `${environment.api_url}pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
+      )
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
         results: [pokemonData],
       });
 
     tick(4000);
-    controller.expectOne(`pokemon/${pokemonData.name}`).flush(pokemonData);
+    controller
+      .expectOne(`${environment.api_url}pokemon/${pokemonData.name}`)
+      .flush(pokemonData);
 
     tick(4000);
 
@@ -193,10 +235,9 @@ describe('Api Service', () => {
       },
     });
     tick(1000);
-    console.log(pokemonsName);
+
     if (!pokemonsName) throw new Error();
 
     expect(pokemonsName).toEqual(searchPokemonInDatabase.map((p) => p.name));
   }));
-
 });
