@@ -10,10 +10,10 @@ describe('Home page', () => {
     cy.byTestId('pokemon-item').should('have.length', 20);
     cy.byTestId('pokemon-item-id').first().should('have.text', '#001');
     cy.byTestId('next-page-button').first().click();
-    cy.wait(500);
+    cy.wait(5000);
     cy.byTestId('pokemon-item-id').first().should('have.text', '#021');
     cy.byTestId('previus-page-button').first().click();
-    cy.wait(500);
+    cy.wait(1000);
     cy.byTestId('pokemon-item-id').first().should('have.text', '#001');
   });
 
