@@ -1,5 +1,5 @@
 import { GlobalErrorHandler } from './global-error-handler';
-import { NotificationService } from '../services/notification.service';
+import { NotificationService } from '../services';
 
 describe('Pokemon Fight Service', () => {
   let globalErroHandler: GlobalErrorHandler;

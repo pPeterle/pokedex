@@ -6,14 +6,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   NotificationService,
   PokemonFightService,
-  PokemonService,
 } from './services';
-import { GlobalErrorHandler } from './errors/global-error-handler';
-import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
-import { LocalStorageDatabase } from './database/local-storage.database';
-import { DATABASE_NAME, LocalDatabase } from './database/local.database';
-import { HttpBaseUrlInterceptor } from './interceptors/http-base-url-inteceptor';
 import { environment } from 'src/environments/environment';
+import { PokemonService } from './http';
+import { DATABASE_NAME, LocalDatabase, LocalStorageDatabase } from './database';
+import { GlobalErrorHandler } from './errors';
+import { HttpBaseUrlInterceptor, HttpErrorInterceptor } from './interceptors';
 
 @NgModule({
   declarations: [],

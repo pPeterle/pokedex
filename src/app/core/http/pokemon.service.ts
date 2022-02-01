@@ -12,9 +12,7 @@ import {
 
 import { PokemonModel, PokemonListModel, ApiResultModel } from '../models';
 import { map, switchMap, mergeMap, catchError } from 'rxjs/operators';
-import { LocalDatabase } from '../database/local.database';
-import { LocalStorageDatabase } from '../database/local-storage.database';
-import { environment } from 'src/environments/environment';
+import { LocalDatabase, LocalStorageDatabase } from '../database';
 
 export const QUERY_LIMIT = 20;
 

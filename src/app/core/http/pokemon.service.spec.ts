@@ -1,4 +1,4 @@
-import { PokemonService, QUERY_LIMIT } from '.';
+import { PokemonService, QUERY_LIMIT } from '../services';
 import { LocalDatabase } from '../database/local.database';
 import { LocalStorageDatabase } from '../database/local-storage.database';
 import { ApiResultModel, PokemonListModel, PokemonModel } from '../models';

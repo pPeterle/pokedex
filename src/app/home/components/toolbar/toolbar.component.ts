@@ -14,7 +14,8 @@ import {
   Subscription,
   startWith,
 } from 'rxjs';
-import { PokemonFightService, PokemonService } from 'src/app/core/services';
+import { PokemonService } from 'src/app/core/http';
+import { PokemonFightService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-toolbar',
