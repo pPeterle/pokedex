@@ -3,7 +3,7 @@ import Dexie, { Table } from 'dexie';
 import { environment } from 'src/environments/environment';
 import { PokemonListModel, PokemonModel } from '../models';
 
-export const DATABASE_NAME = new InjectionToken<String>(environment.database_name);
+export const DATABASE_NAME = new InjectionToken<String>('database_name');
 
 @Injectable()
 export class LocalDatabase extends Dexie {
