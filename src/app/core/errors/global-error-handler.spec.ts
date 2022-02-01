@@ -14,7 +14,7 @@ describe('Pokemon Fight Service', () => {
     globalErroHandler = new GlobalErrorHandler(notifier);
   });
 
-  it('show notification and console', () => {
+  it('show notification and console on generic error', () => {
     spyOn(console, 'error');
 
     globalErroHandler.handleError(new Error());
@@ -23,5 +23,13 @@ describe('Pokemon Fight Service', () => {
     expect(console.error).toHaveBeenCalled();
   })
 
+  it('show notification and console on specific error', () => {
+    spyOn(console, 'error');
 
+    const errorMessage = 'Custom error message';
+    globalErroHandler.handleError(new Error(errorMessage));
+
+    expect(notifier.showError).toHaveBeenCalledWith(errorMessage);
+    expect(console.error).toHaveBeenCalled();
+  })
 });

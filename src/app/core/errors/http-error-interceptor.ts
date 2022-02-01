@@ -11,7 +11,6 @@ import { retry, catchError } from 'rxjs/operators';
 import { NotificationService } from './notification.service';
 
 export class HttpErrorInterceptor implements HttpInterceptor {
-
   constructor(private notificationService: NotificationService) {}
 
   intercept(
@@ -19,7 +18,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError((error: HttpErrorResponse) => {
+      catchError((error: any) => {
         let message = '';
         switch (error.status) {
           case 404:
@@ -31,9 +30,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               message = 'Página não encontrada';
             }
             break;
-          case 400: {
-            message = 'Parâmetros errados.';
-          }
         }
 
         message = navigator.onLine ? message : 'Sem conexão à internet';
