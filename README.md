@@ -84,6 +84,8 @@ Shared: Elements that are shared in the application <br>
    ```sh
    npm run start
    ```
+4. Open browser in <a href="http://localhost:4200/">http://localhost:4200/</a>
+
 ### Tests
 <br>
 Jasmine for unit and integration tests and Cypress for end to end tests.
