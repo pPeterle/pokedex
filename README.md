@@ -36,7 +36,7 @@ This project is based on a technical interview on Aevo, what the requirements ar
     - [x] Data persistencie
         - [x] Index Db
         - [x] Local Storage
-    - [x] Battle Pokemon, select two pokemon and show which have the greater 
+    - [x] Battle Pokemon, select two pokemon and show which have the greater status
     - [x] Documentation
 
 
