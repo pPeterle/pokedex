@@ -14,11 +14,11 @@ export class NotificationService {
 
   showError(message: string): void {
     this.zone.run(() => {
+      this.spinner.hide();
       this.snackBar.open(message, 'X', {
         panelClass: ['error'],
         duration: 2500,
       });
-      this.spinner.hide();
     });
   }
 }
