@@ -60,6 +60,10 @@ Shared: Elements that are shared in the application <br>
   - shared
     - pipes
 
+### Data Flux
+
+<img src="src/assets/data-flux.png">
+
 ### Built With
 
 * [Typescript](https://www.typescriptlang.org/)
