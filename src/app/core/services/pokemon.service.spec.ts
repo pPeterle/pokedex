@@ -7,16 +7,12 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpErrorInterceptor } from '../interceptors/http-error-interceptor';
-import { HttpBaseUrlInterceptor } from '../interceptors/http-base-url-inteceptor';
 import { environment } from 'src/environments/environment';
 
 describe('Api Service', () => {
   let pokemonService: PokemonService;
   let fakeLocalDatabase: LocalDatabase;
   let fakeLocalStorage: LocalStorageDatabase;
-  let fakeNotificationService: NotificationService;
   let controller: HttpTestingController;
 
   const pokemonData: PokemonModel = {
@@ -51,13 +47,6 @@ describe('Api Service', () => {
       }
     );
 
-    fakeNotificationService = jasmine.createSpyObj<NotificationService>(
-      'NotificationService',
-      {
-        showError: undefined,
-      }
-    );
-
     fakeLocalDatabase = jasmine.createSpyObj<LocalDatabase>('LocalDatabase', {
       addPokemonData: Promise.resolve(pokemonsSavedLocal),
       getPokemonsByNames: Promise.resolve([pokemonData]),
@@ -75,21 +64,6 @@ describe('Api Service', () => {
         {
           provide: LocalStorageDatabase,
           useValue: fakeLocalStorage,
-        },
-        {
-          provide: NotificationService,
-          useValue: fakeNotificationService,
-        },
-        {
-          provide: HTTP_INTERCEPTORS,
-          useClass: HttpErrorInterceptor,
-          multi: true,
-          deps: [NotificationService],
-        },
-        {
-          provide: HTTP_INTERCEPTORS,
-          useClass: HttpBaseUrlInterceptor,
-          multi: true,
         },
       ],
     });
@@ -109,7 +83,7 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(`${environment.api_url}pokemon/${pokemonName}`)
+      .expectOne(`pokemon/${pokemonName}`)
       .flush(pokemonData);
 
     expect(fakeLocalStorage.saveHistorySearch).toHaveBeenCalledWith(
@@ -134,15 +108,12 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(`${environment.api_url}pokemon/${pokemonName}`)
+      .expectOne(`pokemon/${pokemonName}`)
       .flush('', {
         status: 404,
         statusText: 'Not found',
       });
 
-    expect(fakeNotificationService.showError).toHaveBeenCalledWith(
-      'Pokemon não encontrado'
-    );
     expect(complete).toBe(true);
   });
 
@@ -159,7 +130,7 @@ describe('Api Service', () => {
     });
     controller
       .expectOne(
-        `${environment.api_url}pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
+        `pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
       )
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
@@ -193,7 +164,7 @@ describe('Api Service', () => {
     });
     controller
       .expectOne(
-        `${environment.api_url}pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
+        `pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
       )
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
@@ -202,7 +173,7 @@ describe('Api Service', () => {
 
     tick(4000);
     controller
-      .expectOne(`${environment.api_url}pokemon/${pokemonData.name}`)
+      .expectOne(`pokemon/${pokemonData.name}`)
       .flush(pokemonData);
 
     tick(4000);
