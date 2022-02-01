@@ -7,8 +7,9 @@ import { NotificationService, PokemonFightService, PokemonService } from './serv
 import { GlobalErrorHandler } from './errors/global-error-handler';
 import { HttpErrorInterceptor } from './errors/http-error-interceptor';
 import { LocalStorageDatabase } from './database/local-storage.database';
-import { LocalDatabase } from './database/local.database';
+import { DATABASE_NAME, LocalDatabase } from './database/local.database';
 import { HttpBaseUrlInterceptor } from './errors/http-base-url-inteceptor';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [],
@@ -30,6 +31,7 @@ import { HttpBaseUrlInterceptor } from './errors/http-base-url-inteceptor';
       useClass: HttpBaseUrlInterceptor,
       multi: true
     },
+    { provide: DATABASE_NAME, useValue: environment.database_name },
     PokemonFightService,
   ],
 })

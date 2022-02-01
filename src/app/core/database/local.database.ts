@@ -1,12 +1,16 @@
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import Dexie, { Table } from 'dexie';
 import { environment } from 'src/environments/environment';
 import { PokemonListModel, PokemonModel } from '../models';
 
+export const DATABASE_NAME = new InjectionToken<String>(environment.database_name);
+
+@Injectable()
 export class LocalDatabase extends Dexie {
   private pokemonTable!: Table<PokemonModel, number>;
 
-  constructor(private nameBd: string = environment.database_name) {
-    super(nameBd);
+  constructor(@Inject(DATABASE_NAME) private dbName: string) {
+    super(dbName);
     this.version(3).stores({
       pokemonTable: 'id, &name',
     });
@@ -44,6 +48,6 @@ export class LocalDatabase extends Dexie {
   }
 
   clearDatabase() {
-    return Dexie.delete(this.nameBd);
+    return Dexie.delete(this.dbName);
   }
 }
