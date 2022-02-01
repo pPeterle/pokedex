@@ -37,7 +37,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private pokemonService: PokemonService
   ) {
     this.subscriptions.push(
-      pokemonFightService.batleStatus.subscribe({
+      pokemonFightService.battleStatus.subscribe({
         next: (status) => {
           this.fightState = status;
         },

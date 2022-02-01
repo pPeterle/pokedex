@@ -147,7 +147,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectPokemon(pokemon: PokemonModel) {
-    if (this.pokemonFightService.atualBatleStatus) {
+    if (this.pokemonFightService.atualBattleStatus) {
       this.pokemonFightService.addPokemonToFight(pokemon);
     } else {
       this.openPokemonDetails(pokemon);

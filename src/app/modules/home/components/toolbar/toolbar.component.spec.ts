@@ -28,7 +28,7 @@ describe('ToolbarComponent', () => {
     keyof PokemonFightService
   >;
 
-  let batleStatus = false;
+  let battleStatus = false;
 
   beforeEach(async () => {
     fakePokemonService = jasmine.createSpyObj<PokemonService>(
@@ -44,14 +44,14 @@ describe('ToolbarComponent', () => {
       get pokemonFightList() {
         return of([]);
       },
-      get batleStatus() {
-        return of(batleStatus);
+      get battleStatus() {
+        return of(battleStatus);
       },
       get resultFight() {
         return of([]);
       },
-      get atualBatleStatus() {
-        return batleStatus;
+      get atualBattleStatus() {
+        return battleStatus;
       },
       setFightState() {},
       addPokemonToFight() {},
@@ -86,7 +86,7 @@ describe('ToolbarComponent', () => {
   it('change the fight state with the opossite state', () => {
     component.changeFightState();
     expect(fakePokemonFightService.setFightState).toHaveBeenCalledWith(
-      !batleStatus
+      !battleStatus
     );
   });
 

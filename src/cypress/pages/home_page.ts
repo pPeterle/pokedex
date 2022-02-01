@@ -40,11 +40,11 @@ export class HomePage {
     return cy.byTestId('pokemon-item').eq(1).click();
   }
 
-  public clickStartBatlePokemon() {
-    return cy.byTestId('batle-pokemon-button').first().click();
+  public clickStartBattlePokemon() {
+    return cy.byTestId('battle-pokemon-button').first().click();
   }
 
-  public getTitleBatleDialog() {
+  public getTitleBattleDialog() {
     return cy.byTestId('fight-pokemon-dialog-title').first();
   }
 }

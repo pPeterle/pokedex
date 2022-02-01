@@ -39,12 +39,12 @@ describe('Home page', () => {
     homePage.getSnackBar().should('be.visible');
   });
 
-  it('select and batle pokemons', () => {
-    homePage.clickStartBatlePokemon().should('have.class', 'selected');
+  it('select and battle pokemons', () => {
+    homePage.clickStartBattlePokemon().should('have.class', 'selected');
 
     homePage.clickFirstPokemonItem().should('have.class', 'selected');
     homePage.clickSecondPokemonItem().should('have.class', 'selected');
 
-    homePage.getTitleBatleDialog().should('be.visible');
+    homePage.getTitleBattleDialog().should('be.visible');
   });
 });

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {  MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PokemonBatle } from 'src/app/core/services';
+import { PokemonBattle } from 'src/app/core/services';
 import { findComponents } from 'src/app/spec-helper/element.spec';
 import { HomeModule } from '../../home.module';
 
@@ -10,7 +10,7 @@ describe('FightPokemonDialogComponent', () => {
   let component: FightPokemonDialogComponent;
   let fixture: ComponentFixture<FightPokemonDialogComponent>;
 
-  const pokemon1: PokemonBatle = {
+  const pokemon1: PokemonBattle = {
     height: 1,
     id: 1,
     name: 'a',
@@ -23,7 +23,7 @@ describe('FightPokemonDialogComponent', () => {
     weight: 1,
     winner: false,
   };
-  const pokemon2: PokemonBatle = {
+  const pokemon2: PokemonBattle = {
     height: 1,
     id: 2,
     name: 'b',

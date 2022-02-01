@@ -4,7 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { of } from 'rxjs';
 import { PokemonService } from 'src/app/core/http';
 import { PokemonModel } from '../../core/models';
-import { PokemonBatle, PokemonFightService } from '../../core/services';
+import { PokemonBattle, PokemonFightService } from '../../core/services';
 import {
   click,
   findComponent,
@@ -20,7 +20,7 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
-  let batleStatus = false;
+  let battleStatus = false;
 
   let fakePokemonService: PokemonService;
   let fakeMatDialog: MatDialog;
@@ -55,7 +55,7 @@ describe('HomeComponent', () => {
     );
 
     const dialogRef = jasmine.createSpyObj<
-      MatDialogRef<FightPokemonDialogComponent, PokemonBatle[]>
+      MatDialogRef<FightPokemonDialogComponent, PokemonBattle[]>
     >('MatDialogRef', {
       afterClosed: of([]),
     });
@@ -68,14 +68,14 @@ describe('HomeComponent', () => {
       get pokemonFightList() {
         return of([pokemon]);
       },
-      get batleStatus() {
-        return of(batleStatus);
+      get battleStatus() {
+        return of(battleStatus);
       },
       get resultFight() {
         return of([]);
       },
-      get atualBatleStatus() {
-        return batleStatus;
+      get atualBattleStatus() {
+        return battleStatus;
       },
       setFightState() {},
       addPokemonToFight() {},
@@ -147,7 +147,7 @@ describe('HomeComponent', () => {
   });
 
   it('open pokemon detail', () => {
-    batleStatus = false;
+    battleStatus = false;
 
     const pokemonDiv = findComponent(fixture, '.pokemon');
     const event = makeClickEvent(pokemonDiv.nativeElement);
@@ -163,7 +163,7 @@ describe('HomeComponent', () => {
   });
 
   it('select pokemon fight', () => {
-    batleStatus = true;
+    battleStatus = true;
 
     const pokemonDiv = findComponent(fixture, '.pokemon');
     const event = makeClickEvent(pokemonDiv.nativeElement);

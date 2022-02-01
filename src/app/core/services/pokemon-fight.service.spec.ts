@@ -1,5 +1,5 @@
 import { first, take } from 'rxjs';
-import { PokemonBatle, PokemonFightService } from '.';
+import { PokemonBattle, PokemonFightService } from '.';
 import { PokemonModel } from '../models';
 
 describe('Pokemon Fight Service', () => {
@@ -59,15 +59,15 @@ describe('Pokemon Fight Service', () => {
     pokemonFightService = new PokemonFightService();
   });
 
-  it('change batle status', () => {
+  it('change battle status', () => {
     pokemonFightService.setFightState(true);
-    expect(pokemonFightService.atualBatleStatus).toBe(true);
+    expect(pokemonFightService.atualBattleStatus).toBe(true);
 
     pokemonFightService.setFightState(false);
-    expect(pokemonFightService.atualBatleStatus).toBe(false);
+    expect(pokemonFightService.atualBattleStatus).toBe(false);
   });
 
-  it('call exitFight when batle status false', () => {
+  it('call exitFight when battle status false', () => {
     spyOn(pokemonFightService, 'exitFight');
 
     pokemonFightService.setFightState(false);
@@ -75,7 +75,7 @@ describe('Pokemon Fight Service', () => {
     expect(pokemonFightService.exitFight).toHaveBeenCalled();
   });
 
-  it('clear list and change batle status to false when exit fight', () => {
+  it('clear list and change battle status to false when exit fight', () => {
     let pokemonsFight: PokemonModel[] | undefined;
     pokemonFightService.setFightState(false);
 
@@ -83,11 +83,11 @@ describe('Pokemon Fight Service', () => {
       pokemonsFight = pokemons;
     });
 
-    expect(pokemonFightService.atualBatleStatus).toBe(false);
+    expect(pokemonFightService.atualBattleStatus).toBe(false);
     expect(pokemonsFight).toHaveSize(0);
   });
 
-  it('not add pokemon if batle status is false', () => {
+  it('not add pokemon if battle status is false', () => {
     let pokemonsFight: PokemonModel[] | undefined;
     pokemonFightService.setFightState(false);
     pokemonFightService.addPokemonToFight(pokemon1);
@@ -125,15 +125,15 @@ describe('Pokemon Fight Service', () => {
   });
 
   it('start fight with 2 pokemons', () => {
-    let resultBatle: PokemonBatle[] | undefined;
+    let resultBattle: PokemonBattle[] | undefined;
 
     pokemonFightService.setFightState(true);
     pokemonFightService.resultFight.pipe(first()).subscribe((pokemons) => {
-      resultBatle = pokemons;
+      resultBattle = pokemons;
     });
     pokemonFightService.addPokemonToFight(pokemon1);
     pokemonFightService.addPokemonToFight(pokemon2);
 
-    expect(resultBatle).toHaveSize(2);
+    expect(resultBattle).toHaveSize(2);
   });
 });

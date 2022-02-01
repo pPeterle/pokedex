@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { PokemonModel } from '../models';
 
-export interface PokemonBatle extends PokemonModel {
+export interface PokemonBattle extends PokemonModel {
   total: number;
   winner: boolean;
 }
@@ -16,28 +16,28 @@ export class PokemonFightService {
     return this._pokemonsFightSubject.asObservable();
   }
 
-  private _resultFightSubject = new Subject<PokemonBatle[]>();
-  get resultFight(): Observable<PokemonBatle[]> {
+  private _resultFightSubject = new Subject<PokemonBattle[]>();
+  get resultFight(): Observable<PokemonBattle[]> {
     return this._resultFightSubject.asObservable();
   }
 
-  private _batleStatus = new BehaviorSubject<boolean>(false);
-  get atualBatleStatus() {
-    return this._batleStatus.value;
+  private _battleStatus = new BehaviorSubject<boolean>(false);
+  get atualBattleStatus() {
+    return this._battleStatus.value;
   }
-  get batleStatus(): Observable<boolean> {
-    return this._batleStatus.asObservable();
+  get battleStatus(): Observable<boolean> {
+    return this._battleStatus.asObservable();
   }
 
   setFightState(isFight: boolean) {
-    this._batleStatus.next(isFight);
+    this._battleStatus.next(isFight);
     if (!isFight) {
       this.exitFight();
     }
   }
 
   addPokemonToFight(pokemon: PokemonModel) {
-    if (!this._batleStatus.value) return;
+    if (!this._battleStatus.value) return;
 
     const index = this._pokemonsFightSubject.value.indexOf(pokemon);
 
@@ -62,7 +62,7 @@ export class PokemonFightService {
     );
     this._pokemonsFightSubject.next(this._pokemonsFightSubject.value);
 
-    this._batleStatus.next(false);
+    this._battleStatus.next(false);
   }
 
   private fightPokemon() {
