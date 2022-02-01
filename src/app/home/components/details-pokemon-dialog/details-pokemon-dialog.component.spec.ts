@@ -1,9 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PokemonModel } from 'src/app/core/models';
 import { HomeModule } from '../../home.module';
 
-import { DetailsPokemonDialogComponent, MAX_STAT_TOTAL } from './details-pokemon-dialog.component';
+import {
+  DetailsPokemonDialogComponent,
+  MAX_STAT_TOTAL,
+} from './details-pokemon-dialog.component';
 
 describe('DetailsPokemonComponent', () => {
   let component: DetailsPokemonDialogComponent;
@@ -59,6 +62,8 @@ describe('DetailsPokemonComponent', () => {
   it('check calc total status and percentage', () => {
     const totalStatus = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat;
     expect(component.totalStatus).toBe(totalStatus);
-    expect(component.totalStatusPercentage).toBe(totalStatus/MAX_STAT_TOTAL * 100);
-  })
+    expect(component.totalStatusPercentage).toBe(
+      (totalStatus / MAX_STAT_TOTAL) * 100
+    );
+  });
 });

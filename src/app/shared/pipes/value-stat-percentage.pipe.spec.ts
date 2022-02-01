@@ -5,13 +5,12 @@ describe('ValueStatPercentagePipe', () => {
   let pipe: ValueStatPercentagePipe;
 
   beforeEach(() => {
-     pipe = new ValueStatPercentagePipe();
-  })
+    pipe = new ValueStatPercentagePipe();
+  });
 
   it('calc percentage', () => {
     const result = pipe.transform(24552);
-    const expected = 24552/MAX_STAT * 100;
+    const expected = (24552 / MAX_STAT) * 100;
     expect(result).toBe(expected);
   });
-
 });

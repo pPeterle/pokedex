@@ -1,4 +1,4 @@
-import { NotificationService, PokemonService, QUERY_LIMIT } from '.';
+import { PokemonService, QUERY_LIMIT } from '.';
 import { LocalDatabase } from '../database/local.database';
 import { LocalStorageDatabase } from '../database/local-storage.database';
 import { ApiResultModel, PokemonListModel, PokemonModel } from '../models';
@@ -7,7 +7,6 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { environment } from 'src/environments/environment';
 
 describe('Api Service', () => {
   let pokemonService: PokemonService;
@@ -82,9 +81,7 @@ describe('Api Service', () => {
         fail('Error');
       },
     });
-    controller
-      .expectOne(`pokemon/${pokemonName}`)
-      .flush(pokemonData);
+    controller.expectOne(`pokemon/${pokemonName}`).flush(pokemonData);
 
     expect(fakeLocalStorage.saveHistorySearch).toHaveBeenCalledWith(
       pokemonName
@@ -107,12 +104,10 @@ describe('Api Service', () => {
         complete = true;
       },
     });
-    controller
-      .expectOne(`pokemon/${pokemonName}`)
-      .flush('', {
-        status: 404,
-        statusText: 'Not found',
-      });
+    controller.expectOne(`pokemon/${pokemonName}`).flush('', {
+      status: 404,
+      statusText: 'Not found',
+    });
 
     expect(complete).toBe(true);
   });
@@ -129,9 +124,7 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(
-        `pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
-      )
+      .expectOne(`pokemon?limit=${QUERY_LIMIT}&offset=${offset}`)
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
         results: [pokemonData],
@@ -163,18 +156,14 @@ describe('Api Service', () => {
       },
     });
     controller
-      .expectOne(
-        `pokemon?limit=${QUERY_LIMIT}&offset=${offset}`
-      )
+      .expectOne(`pokemon?limit=${QUERY_LIMIT}&offset=${offset}`)
       .flush(<ApiResultModel<PokemonModel>>{
         count: 1,
         results: [pokemonData],
       });
 
     tick(4000);
-    controller
-      .expectOne(`pokemon/${pokemonData.name}`)
-      .flush(pokemonData);
+    controller.expectOne(`pokemon/${pokemonData.name}`).flush(pokemonData);
 
     tick(4000);
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {  MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PokemonBatle } from 'src/app/core/services';
 import { findComponents } from 'src/app/spec-helper/element.spec';
 import { HomeModule } from '../../home.module';
@@ -60,8 +60,10 @@ describe('FightPokemonDialogComponent', () => {
 
     if (pokemon1.winner) {
       expect(pokemons[0].nativeElement).toHaveClass('winner');
+      expect(pokemons[1].nativeElement).not.toHaveClass('winner');
     }
     if (pokemon2.winner) {
+      expect(pokemons[0].nativeElement).not.toHaveClass('winner');
       expect(pokemons[1].nativeElement).toHaveClass('winner');
     }
   });

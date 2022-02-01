@@ -4,8 +4,8 @@ describe('IdPokemonPipe', () => {
   let pipe: IdPokemonPipe;
 
   beforeEach(() => {
-     pipe = new IdPokemonPipe();
-  })
+    pipe = new IdPokemonPipe();
+  });
 
   it('transform id when less than 10', () => {
     const result = pipe.transform(5);

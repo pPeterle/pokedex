@@ -3,14 +3,14 @@
   <div class="spacer"></div>
   <div class="form">
     <input
-    class="input"
-    type="text"
-    placeholder=" "
-    [matAutocomplete]="auto"
-    [formControl]="control"
-    (keyup.enter)="getPokemonData()"
-    data-testid="search-pokemon-input"
-    #input
+      class="input"
+      type="text"
+      placeholder=" "
+      [matAutocomplete]="auto"
+      [formControl]="control"
+      (keyup.enter)="getPokemonData()"
+      data-testid="search-pokemon-input"
+      #input
     />
     <button
       *ngIf="input.value"
@@ -51,7 +51,7 @@
     color="primary"
     aria-label="Fight"
     (click)="changeFightState()"
-    [ngClass]="fightState ? 'selected' : '' "
+    [ngClass]="fightState ? 'selected' : ''"
     data-testid="batle-pokemon-button"
   >
     <mat-icon>local_fire_department</mat-icon>

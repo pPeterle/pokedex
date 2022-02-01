@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -28,7 +26,7 @@ export function testIdSelector(testId: string): string {
  */
 export function queryByCss<T>(
   fixture: ComponentFixture<T>,
-  selector: string,
+  selector: string
 ): DebugElement {
   // The return type of DebugElement#query() is declared as DebugElement,
   // but the actual return type is DebugElement | null.
@@ -49,7 +47,10 @@ export function queryByCss<T>(
  * @param testId Test id set by `data-testid`
  *
  */
-export function findEl<T>(fixture: ComponentFixture<T>, testId: string): DebugElement {
+export function findEl<T>(
+  fixture: ComponentFixture<T>,
+  testId: string
+): DebugElement {
   return queryByCss<T>(fixture, testIdSelector(testId));
 }
 
@@ -59,7 +60,10 @@ export function findEl<T>(fixture: ComponentFixture<T>, testId: string): DebugEl
  * @param fixture Component fixture
  * @param testId Test id set by `data-testid`
  */
-export function findEls<T>(fixture: ComponentFixture<T>, testId: string): DebugElement[] {
+export function findEls<T>(
+  fixture: ComponentFixture<T>,
+  testId: string
+): DebugElement[] {
   return fixture.debugElement.queryAll(By.css(testIdSelector(testId)));
 }
 
@@ -69,7 +73,10 @@ export function findEls<T>(fixture: ComponentFixture<T>, testId: string): DebugE
  * @param fixture Component fixture
  * @param testId Test id set by `data-testid`
  */
-export function getText<T>(fixture: ComponentFixture<T>, testId: string): string {
+export function getText<T>(
+  fixture: ComponentFixture<T>,
+  testId: string
+): string {
   return findEl(fixture, testId).nativeElement.textContent;
 }
 
@@ -84,7 +91,7 @@ export function getText<T>(fixture: ComponentFixture<T>, testId: string): string
 export function expectText<T>(
   fixture: ComponentFixture<T>,
   testId: string,
-  text: string,
+  text: string
 ): void {
   expect(getText(fixture, testId)).toBe(text);
 }
@@ -96,7 +103,10 @@ export function expectText<T>(
  * @param fixture Component fixture
  * @param text Expected text
  */
-export function expectContainedText<T>(fixture: ComponentFixture<T>, text: string): void {
+export function expectContainedText<T>(
+  fixture: ComponentFixture<T>,
+  text: string
+): void {
   expect(fixture.nativeElement.textContent).toContain(text);
 }
 
@@ -107,7 +117,10 @@ export function expectContainedText<T>(fixture: ComponentFixture<T>, text: strin
  * @param fixture Component fixture
  * @param text Expected text
  */
-export function expectContent<T>(fixture: ComponentFixture<T>, text: string): void {
+export function expectContent<T>(
+  fixture: ComponentFixture<T>,
+  text: string
+): void {
   expect(fixture.nativeElement.textContent).toBe(text);
 }
 
@@ -121,7 +134,7 @@ export function expectContent<T>(fixture: ComponentFixture<T>, text: string): vo
 export function dispatchFakeEvent(
   element: EventTarget,
   type: string,
-  bubbles: boolean = false,
+  bubbles: boolean = false
 ): void {
   const event = document.createEvent('Event');
   event.initEvent(type, bubbles, false);
@@ -139,13 +152,17 @@ export function dispatchFakeEvent(
  */
 export function setFieldElementValue(
   element: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
-  value: string,
+  value: string
 ): void {
   element.value = value;
   // Dispatch an `input` or `change` fake event
   // so Angular form bindings take notice of the change.
   const isSelect = element instanceof HTMLSelectElement;
-  dispatchFakeEvent(element, isSelect ? 'change' : 'input', isSelect ? false : true);
+  dispatchFakeEvent(
+    element,
+    isSelect ? 'change' : 'input',
+    isSelect ? false : true
+  );
 }
 
 /**
@@ -158,7 +175,7 @@ export function setFieldElementValue(
 export function setFieldValue<T>(
   fixture: ComponentFixture<T>,
   testId: string,
-  value: string,
+  value: string
 ): void {
   setFieldElementValue(findEl(fixture, testId).nativeElement, value);
 }
@@ -174,7 +191,7 @@ export function setFieldValue<T>(
 export function checkField<T>(
   fixture: ComponentFixture<T>,
   testId: string,
-  checked: boolean,
+  checked: boolean
 ): void {
   const { nativeElement } = findEl(fixture, testId);
   nativeElement.checked = checked;
@@ -199,7 +216,7 @@ export function makeClickEvent(target: EventTarget): Partial<MouseEvent> {
     currentTarget: target,
     bubbles: true,
     cancelable: true,
-    button: 0
+    button: 0,
   };
 }
 
@@ -226,7 +243,7 @@ export function click<T>(fixture: ComponentFixture<T>, testId: string): void {
  */
 export function findComponent<T>(
   fixture: ComponentFixture<T>,
-  selector: string,
+  selector: string
 ): DebugElement {
   return queryByCss(fixture, selector);
 }
@@ -236,7 +253,7 @@ export function findComponent<T>(
  */
 export function findComponents<T>(
   fixture: ComponentFixture<T>,
-  selector: string,
+  selector: string
 ): DebugElement[] {
   return fixture.debugElement.queryAll(By.css(selector));
 }

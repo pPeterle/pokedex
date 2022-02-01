@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationService } from '../services/notification.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(private notifier: NotificationService) {}

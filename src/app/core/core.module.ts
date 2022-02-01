@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { NotificationService, PokemonFightService, PokemonService } from './services';
+import {
+  NotificationService,
+  PokemonFightService,
+  PokemonService,
+} from './services';
 import { GlobalErrorHandler } from './errors/global-error-handler';
 import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
 import { LocalStorageDatabase } from './database/local-storage.database';
@@ -24,12 +28,12 @@ import { environment } from 'src/environments/environment';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
       multi: true,
-      deps: [NotificationService]
+      deps: [NotificationService],
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpBaseUrlInterceptor,
-      multi: true
+      multi: true,
     },
     { provide: DATABASE_NAME, useValue: environment.database_name },
     PokemonFightService,

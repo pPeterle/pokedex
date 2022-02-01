@@ -1,5 +1,5 @@
-import { TypeModel } from "./type.model";
-import { StatModel } from "./stat.model";
+import { TypeModel } from './type.model';
+import { StatModel } from './stat.model';
 
 export interface PokemonModel {
   id: number;

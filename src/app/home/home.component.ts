@@ -26,7 +26,6 @@ import { FightPokemonDialogComponent } from './components/fight-pokemon-dialog/f
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
   private requestPokemon = new BehaviorSubject<string>('');
   private subscriptions: Subscription[] = [];
 

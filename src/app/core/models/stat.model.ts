@@ -4,5 +4,5 @@ export interface StatModel {
   stat: {
     name: string;
     url: string;
-  }
+  };
 }
