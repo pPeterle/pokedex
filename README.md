@@ -22,7 +22,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is based on a technical interview on Aevo, what the requirements are:
+Just a project example using angular and consuming PokeApi
+
+Requirements:
 
 - [x] Explore <a href="https://pokeapi.co/docs/v2"><strong>Pokeapi</strong></a> documentation
 - [x] Create a page to show the list of pokemon
